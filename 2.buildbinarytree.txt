@@ -1,0 +1,53 @@
+// We have imported the necessary tool classes.
+// If you need to import additional packages or classes, please import here.
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        String enterSum = s.next();
+        int Sum = Integer.parseInt(enterSum);
+        String[] element = new String[Sum];
+        for(int i=0; i<Sum; i++){
+            element[i] = s.next();
+        }
+
+        int[] ele = changeToMin(element);
+        int[] res = new int[2*Sum-1];
+        //获取根节点频率
+        int start = 0;
+        int end = ele.length;
+        res[0] = findMean(ele,start,end);
+
+        getTheFrequency(res, ele, start, (start+end)/2, res[0], 1);
+        getTheFrequency(res, ele, (start+end)/2, end, res[0], 2);
+        String result = String.valueOf(res);
+        for(int i=0; i<2*Sum-1;i++){
+            System.out.printf(Integer.toString(res[i]));
+        }
+    }
+    static public int[] changeToMin(String[] element){
+        int[] res = new int[element.length];
+        for(int i=0; i<element.length; i++){
+            res[i] = Integer.parseInt(element[i]);
+        }
+        return res;
+    }
+    static public int findMean(int[] ele, int start, int end){
+        int max = ele[start];
+        int min = ele[start];
+        for(int i=start+1; i<end; i++){
+            if(max<ele[i])
+                max = ele[i];
+            if(min>ele[i])
+                min = ele[i];
+        }
+        return (max+min)/2;
+    }
+    static public void getTheFrequency(int[] res, int[] ele, int start, int end, int root, int index){
+        if(start>=end||index>res.length)return;
+        res[index] = findMean(ele,start,end) - root;
+        getTheFrequency(res, ele, start, (start+end)/2, root+res[index], index*2+1);
+        getTheFrequency(res, ele, (start+end)/2, end, root+res[index], index*2+2);
+    }
+}
+

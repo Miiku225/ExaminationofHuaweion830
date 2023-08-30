@@ -1,0 +1,57 @@
+// We have imported the necessary tool classes.
+// If you need to import additional packages or classes, please import here.
+
+public class Main {
+    public static void main(String[] args) {
+        // please define the JAVA input here. For example: Scanner s = new Scanner(System.in);
+        // please finish the function body here.
+        // please define the JAVA output here. For example: System.out.println(s.nextInt());
+        Scanner s = new Scanner(System.in);
+        String enterNum = s.next();
+        int enterSum = Integer.parseInt(enterNum);
+        String[] enterTime = new String[enterSum];
+        for(int i=0; i<enterSum; i++){
+            enterTime[i] = s.next();
+        }
+        s.next();
+        String[] outTime = new String[enterSum];
+        for(int i=0; i<enterSum; i++){
+            outTime[i] = s.next();
+        }
+        //首先是确定午休时间12：00-14：00，晚餐时间是18：00-19：30；若enterTime[i+1]-outTime[i]>=15min,则扣除这段时间，否则算连续。
+        int[] enterMin = new int[enterSum];
+        int[] outMin = new int[enterSum];
+        enterMin = changeToMin(enterTime);
+        outMin = changeToMin(outTime);
+        int workTime = 0;
+        for(int i =0; i<enterSum; i++){
+            if(outMin[i]>12*60&&outMin[i]<14*60){
+                outMin[i] = 12*60;
+            }else if(outMin[i]>18*60&&outMin[i]<39*30){
+                outMin[i] = 18*60;
+            }
+            if(enterMin[i]>12*60&&enterMin[i]<14*60){
+                enterMin[i] = 14*60;
+            } else if (enterMin[i]>18*60&&enterMin[i]<39*30) {
+                enterMin[i] = 39*30;
+            }
+            if(outMin[i]>enterMin[i])
+                workTime += outMin[i] - enterMin[i];
+            if(i!=0){
+                if(enterMin[i] - outMin[i-1] <= 15){
+                    workTime += enterMin[i] - outMin[i-1];
+                }
+            }
+        }
+        System.out.println(workTime);
+    }
+    static public int[] changeToMin(String[] timespot){
+        int[] res = new int[timespot.length];
+        String[] temp = new String[2];
+        for(int i=0; i<timespot.length; i++){
+            temp = timespot[i].split(":");
+            res[i] = Integer.parseInt(temp[0])*60 + Integer.parseInt(temp[1]);
+        }
+        return res;
+    }
+}
